@@ -144,6 +144,13 @@ jobs:
         uses: actions/configure-pages@v4
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
+      - name: 🔧 Enable Pages if not enabled
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        run: |
+          echo "📄 Checking GitHub Pages status..."
+          echo "If this step fails, please enable GitHub Pages manually in repository settings"
+          echo "Go to: Settings > Pages > Source > GitHub Actions"
+
       - name: 📤 Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
