@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>모던 스프레드시트</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
@@ -16,16 +16,16 @@
     </div>
 
     <div class="controls">
-      <button class="btn" onclick="exportExcel()">
+      <button class="btn" id="exportBtn">
         📥 Excel로 내보내기
       </button>
-      <button class="btn btn-secondary" onclick="addRow()">
+      <button class="btn btn-secondary" id="addRowBtn">
         ➕ 행 추가
       </button>
-      <button class="btn btn-secondary" onclick="addColumn()">
+      <button class="btn btn-secondary" id="addColumnBtn">
         ➕ 열 추가
       </button>
-      <button class="btn" onclick="clearAll()" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+      <button class="btn" id="clearAllBtn" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
         🗑️ 전체 삭제
       </button>
     </div>
@@ -86,6 +86,6 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

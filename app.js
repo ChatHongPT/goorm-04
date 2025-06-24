@@ -33,7 +33,16 @@ const columns = [
 document.addEventListener("DOMContentLoaded", function () {
   initializeEventListeners();
   addKeyboardNavigation();
+  initializeButtonListeners();
 });
+
+// 버튼 이벤트 리스너 초기화
+function initializeButtonListeners() {
+  document.getElementById("exportBtn").addEventListener("click", exportExcel);
+  document.getElementById("addRowBtn").addEventListener("click", addRow);
+  document.getElementById("addColumnBtn").addEventListener("click", addColumn);
+  document.getElementById("clearAllBtn").addEventListener("click", clearAll);
+}
 
 // 이벤트 리스너 초기화
 function initializeEventListeners() {
@@ -55,9 +64,8 @@ function handleCellFocus(event) {
 
   // 헤더 하이라이트
   const colHeader = document.querySelector(
-    `th.col-header:nth-child(${getColumnIndex(col) + 1})`
+    `th.col-header:nth-child(${getColumnIndex(col) + 2})`
   );
-  const rowHeader = document.querySelector(`th.row-header:nth-child(1)`);
   const currentRowHeader = input.closest("tr").querySelector(".row-header");
 
   if (colHeader) colHeader.classList.add("header-highlight");
@@ -103,15 +111,15 @@ function addRow() {
   const newRow = document.createElement("tr");
 
   newRow.innerHTML = `
-    <th class="row-header">${currentRow}</th>
-    ${columns
-      .slice(0, currentCol)
-      .map(
-        (col) =>
-          `<td><input type="text" class="cell-input" data-row="${currentRow}" data-col="${col}"></td>`
-      )
-      .join("")}
-  `;
+        <th class="row-header">${currentRow}</th>
+        ${columns
+          .slice(0, currentCol)
+          .map(
+            (col) =>
+              `<td><input type="text" class="cell-input" data-row="${currentRow}" data-col="${col}"></td>`
+          )
+          .join("")}
+      `;
 
   tbody.appendChild(newRow);
 
@@ -283,7 +291,7 @@ function exportExcel() {
   XLSX.writeFile(wb, fileName);
 
   // 성공 피드백
-  const btn = event.target;
+  const btn = document.getElementById("exportBtn");
   const originalText = btn.innerHTML;
   btn.innerHTML = "✅ 내보내기 완료!";
   btn.style.background = "linear-gradient(135deg, #51cf66, #40c057)";
