@@ -288,8 +288,6 @@ graph LR
 - **클라이언트 전용**: 서버 데이터 저장 없음
 - **HTTPS**: GitHub Pages 자동 SSL
 
-보안 취약점을 발견하셨다면 [Security Policy](SECURITY.md)를 참조해주세요.
-
 ## 🌟 로드맵
 
 ### 🎯 다음 버전 (v2.0)
@@ -306,56 +304,9 @@ graph LR
 - [ ] **CSV 가져오기**: 외부 파일 불러오기
 - [ ] **인쇄 최적화**: PDF 내보내기
 
-## 📄 라이선스
-
-이 프로젝트는 **MIT License** 하에 배포됩니다.
-
-```
-MIT License
-
-Copyright (c) 2025 Your Name
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-```
-
-## 🙏 감사의 말
-
 ### 🛠️ 기술 스택
 
 - **Vanilla JavaScript** - 순수하고 강력한 웹 표준
 - **CSS Grid** - 현대적인 레이아웃 시스템
 - **HTML5** - 시맨틱 마크업
 - **GitHub Pages** - 무료 호스팅 서비스
-
-### 🎨 디자인 영감
-
-- **Glassmorphism** - 모던 UI 트렌드
-- **Material Design** - 구글의 디자인 철학
-- **Apple Human Interface** - 직관적인 사용자 경험
-
-### 🌟 커뮤니티
-
-이 프로젝트는 오픈소스 커뮤니티의 지원으로 만들어졌습니다.
-
----
-
-<div align="center">
-
-**⭐ 이 프로젝트가 유용하다면 스타를 눌러주세요!**
-
-[![Star History Chart](https://api.star-history.com/svg?repos=ChatHongPT/goorm-04&type=Date)](https://star-history.com/#ChatHongPT/goorm-04&Date)
-
-**함께 더 나은 스프레드시트를 만들어 나가요!** 🚀
-
-</div>
