@@ -1,0 +1,192 @@
+name: 🚀 Deploy Modern Spreadsheet
+
+# 워크플로우 트리거 조건
+on:
+  # main 브랜치에 push될 때
+  push:
+    branches: [main, master]
+
+  # Pull Request가 main 브랜치로 올 때
+  pull_request:
+    branches: [main, master]
+
+  # 수동 실행 가능
+  workflow_dispatch:
+
+# 환경 변수 설정
+env:
+  NODE_VERSION: "18"
+  DEPLOY_BRANCH: "gh-pages"
+
+# Job 정의
+jobs:
+  # 1. 코드 품질 검사 및 테스트
+  quality-check:
+    name: 🔍 Quality Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📂 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: 📦 Install dependencies
+        run: |
+          npm init -y
+          npm install --save-dev eslint prettier htmlhint stylelint
+
+      - name: 🎨 Check HTML syntax
+        run: |
+          npx htmlhint index.html
+        continue-on-error: true
+
+      - name: 🎯 Check CSS syntax
+        run: |
+          npx stylelint styles.css
+        continue-on-error: true
+
+      - name: ⚡ Check JavaScript syntax
+        run: |
+          npx eslint app.js
+        continue-on-error: true
+
+  # 2. 빌드 및 최적화
+  build:
+    name: 🏗️ Build & Optimize
+    runs-on: ubuntu-latest
+    needs: quality-check
+
+    steps:
+      - name: 📂 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Install build tools
+        run: |
+          npm init -y
+          npm install --save-dev html-minifier clean-css-cli terser
+
+      - name: 🗜️ Minify HTML
+        run: |
+          npx html-minifier --collapse-whitespace --remove-comments --minify-css --minify-js index.html -o dist/index.html
+
+      - name: 🗜️ Minify CSS
+        run: |
+          mkdir -p dist
+          npx cleancss -o dist/styles.min.css styles.css
+
+      - name: 🗜️ Minify JavaScript
+        run: |
+          npx terser app.js -o dist/app.min.js --compress --mangle
+
+      - name: 📝 Update file references
+        run: |
+          sed -i 's/styles\.css/styles.min.css/g' dist/index.html
+          sed -i 's/app\.js/app.min.js/g' dist/index.html
+
+      - name: 📤 Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+          retention-days: 30
+
+  # 3. 배포 (main 브랜치만)
+  deploy:
+    name: 🌐 Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    # GitHub Pages 배포 권한 설정
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    # 배포 환경 설정
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: 📂 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📥 Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: ./dist
+
+      - name: 📋 Copy original files for fallback
+        run: |
+          cp index.html dist/
+          cp styles.css dist/
+          cp app.js dist/
+
+      - name: 📄 Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: 📤 Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # 4. 성능 테스트 (선택적)
+  performance-test:
+    name: 📊 Performance Test
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: 📂 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 📦 Install Lighthouse CI
+        run: npm install -g @lhci/cli
+
+      - name: 🚦 Run Lighthouse CI
+        run: |
+          lhci autorun --upload.target=temporary-public-storage
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+  # 5. 알림 (선택적)
+  notify:
+    name: 📢 Notification
+    runs-on: ubuntu-latest
+    needs: [deploy, performance-test]
+    if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+
+    steps:
+      - name: 🎉 Success Notification
+        if: needs.deploy.result == 'success'
+        run: |
+          echo "🎉 배포 성공! 스프레드시트가 성공적으로 배포되었습니다."
+          echo "🌐 URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
+      - name: ❌ Failure Notification
+        if: needs.deploy.result == 'failure'
+        run: |
+          echo "❌ 배포 실패! 로그를 확인해주세요."
