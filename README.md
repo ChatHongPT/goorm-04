@@ -2,57 +2,9 @@
 
 <div align="center">
 
-<!-- 메인 배지들 (큰 스타일) -->
-
-![Build Status](https://img.shields.io/github/actions/workflow/status/your-username/modern-spreadsheet/deploy.yml?branch=main&style=for-the-badge&logo=github&label=BUILD&color=ff6b35)
-![License](https://img.shields.io/github/license/your-username/modern-spreadsheet?style=for-the-badge&logo=opensourceinitiative&logoColor=white&color=f7931e)
-![Version](https://img.shields.io/github/package-json/v/your-username/modern-spreadsheet?style=for-the-badge&logo=npm&color=ff4757)
-
-<!-- 기술 스택 배지 -->
-
-![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![HTML5](https://img.shields.io/badge/HTML5-Semantic-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-Modern-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-
-<!-- 도구 및 플랫폼 -->
-
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
-![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-222222?style=for-the-badge&logo=GitHub%20Pages&logoColor=white)
-
-<br/>
-
-<!-- 소셜 배지 -->
-
-![Stars](https://img.shields.io/github/stars/your-username/modern-spreadsheet?style=social)
-![Forks](https://img.shields.io/github/forks/your-username/modern-spreadsheet?style=social)
-![Watchers](https://img.shields.io/github/watchers/your-username/modern-spreadsheet?style=social)
-
-<!-- 프로젝트 통계 (작은 스타일) -->
-
-![Issues](https://img.shields.io/github/issues/your-username/modern-spreadsheet?style=flat-square&color=red)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)
-![Last Commit](https://img.shields.io/github/last-commit/your-username/modern-spreadsheet?style=flat-square&color=blueviolet)
-![Code Size](https://img.shields.io/github/languages/code-size/your-username/modern-spreadsheet?style=flat-square&color=orange)
-
-<!-- 더 많은 통계 -->
-
-![Contributors](https://img.shields.io/github/contributors/your-username/modern-spreadsheet?style=flat-square&color=green)
-![Repo Size](https://img.shields.io/github/repo-size/your-username/modern-spreadsheet?style=flat-square&color=yellow)
-![Languages](https://img.shields.io/github/languages/count/your-username/modern-spreadsheet?style=flat-square&color=cyan)
-
-<!-- 상태 및 품질 -->
-
-![Website](https://img.shields.io/website?style=flat-square&url=https%3A//your-username.github.io/modern-spreadsheet&label=demo&color=ff6b35)
-![Maintenance](https://img.shields.io/maintenance/yes/2025?style=flat-square&color=blue)
-![Security](https://img.shields.io/badge/security-A+-brightgreen?style=flat-square&logo=shield)
-
-<!-- 브라우저 호환성 -->
-
-![Chrome](https://img.shields.io/badge/Chrome-✓-4285F4?style=flat-square&logo=GoogleChrome&logoColor=white)
-![Firefox](https://img.shields.io/badge/Firefox-✓-FF7139?style=flat-square&logo=Firefox-Browser&logoColor=white)
-![Safari](https://img.shields.io/badge/Safari-✓-000000?style=flat-square&logo=Safari&logoColor=white)
-![Edge](https://img.shields.io/badge/Edge-✓-0078D7?style=flat-square&logo=Microsoft-edge&logoColor=white)
-
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat-square&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=flat-square&logo=javascript&logoColor=%23F7DF1E)
 <!-- 커스텀 프로젝트 배지 -->
 
 ![Spreadsheet](https://img.shields.io/badge/🔥-Hot_Project-ff6b35?style=flat-square)
@@ -63,6 +15,7 @@
 </div>
 
 ---
+<img width="1323" alt="스크린샷 2025-06-24 오후 6 17 59" src="https://github.com/user-attachments/assets/c16401b1-779d-4bb0-a8a5-9c1deb8a8d74" />
 
 > 🚀 **의존성 없는 순수 JavaScript로 만든 모던 웹 스프레드시트**  
 > Excel과 호환되는 강력한 기능과 아름다운 UI를 제공합니다.
@@ -401,7 +354,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 **⭐ 이 프로젝트가 유용하다면 스타를 눌러주세요!**
 
-[![Star History Chart](https://api.star-history.com/svg?repos=your-username/modern-spreadsheet&type=Date)](https://star-history.com/#your-username/modern-spreadsheet&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=ChatHongPT/goorm-04&type=Date)](https://star-history.com/#ChatHongPT/goorm-04&Date)
 
 **함께 더 나은 스프레드시트를 만들어 나가요!** 🚀
 
