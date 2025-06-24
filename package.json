@@ -1,0 +1,33 @@
+{
+  "name": "modern-spreadsheet",
+  "version": "1.0.0",
+  "description": "모던하고 직관적인 웹 스프레드시트 애플리케이션",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000 || python3 -m http.server 3000 || npx http-server . -p 3000",
+    "test": "echo 'No tests specified'",
+    "deploy": "echo 'Deployment handled by GitHub Actions'"
+  },
+  "keywords": [
+    "spreadsheet",
+    "web-app",
+    "excel",
+    "data-management",
+    "modern-ui",
+    "responsive",
+    "vanilla-js"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "homepage": "https://your-username.github.io/modern-spreadsheet",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/modern-spreadsheet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/modern-spreadsheet/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

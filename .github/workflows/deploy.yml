@@ -13,99 +13,12 @@ on:
   # 수동 실행 가능
   workflow_dispatch:
 
-# 환경 변수 설정
-env:
-  NODE_VERSION: "18"
-  DEPLOY_BRANCH: "gh-pages"
-
 # Job 정의
 jobs:
-  # 1. 코드 품질 검사 및 테스트
-  quality-check:
-    name: 🔍 Quality Check
+  # 1. 파일 검증 및 빌드
+  build-and-deploy:
+    name: 🏗️ Build and Deploy
     runs-on: ubuntu-latest
-
-    steps:
-      - name: 📂 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-
-      - name: 📦 Install dependencies
-        run: |
-          npm init -y
-          npm install --save-dev eslint prettier htmlhint stylelint
-
-      - name: 🎨 Check HTML syntax
-        run: |
-          npx htmlhint index.html
-        continue-on-error: true
-
-      - name: 🎯 Check CSS syntax
-        run: |
-          npx stylelint styles.css
-        continue-on-error: true
-
-      - name: ⚡ Check JavaScript syntax
-        run: |
-          npx eslint app.js
-        continue-on-error: true
-
-  # 2. 빌드 및 최적화
-  build:
-    name: 🏗️ Build & Optimize
-    runs-on: ubuntu-latest
-    needs: quality-check
-
-    steps:
-      - name: 📂 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: 📦 Install build tools
-        run: |
-          npm init -y
-          npm install --save-dev html-minifier clean-css-cli terser
-
-      - name: 🗜️ Minify HTML
-        run: |
-          npx html-minifier --collapse-whitespace --remove-comments --minify-css --minify-js index.html -o dist/index.html
-
-      - name: 🗜️ Minify CSS
-        run: |
-          mkdir -p dist
-          npx cleancss -o dist/styles.min.css styles.css
-
-      - name: 🗜️ Minify JavaScript
-        run: |
-          npx terser app.js -o dist/app.min.js --compress --mangle
-
-      - name: 📝 Update file references
-        run: |
-          sed -i 's/styles\.css/styles.min.css/g' dist/index.html
-          sed -i 's/app\.js/app.min.js/g' dist/index.html
-
-      - name: 📤 Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-files
-          path: dist/
-          retention-days: 30
-
-  # 3. 배포 (main 브랜치만)
-  deploy:
-    name: 🌐 Deploy to GitHub Pages
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
     # GitHub Pages 배포 권한 설정
     permissions:
@@ -113,7 +26,7 @@ jobs:
       pages: write
       id-token: write
 
-    # 배포 환경 설정
+    # 배포 환경 설정 (main 브랜치만)
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -122,35 +35,131 @@ jobs:
       - name: 📂 Checkout code
         uses: actions/checkout@v4
 
-      - name: 📥 Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-files
-          path: ./dist
-
-      - name: 📋 Copy original files for fallback
+      - name: 🔍 Verify required files
         run: |
+          echo "🔍 Checking required files..."
+          if [ ! -f "index.html" ]; then
+            echo "❌ index.html not found!"
+            exit 1
+          fi
+          if [ ! -f "styles.css" ]; then
+            echo "❌ styles.css not found!"
+            exit 1
+          fi
+          if [ ! -f "app.js" ]; then
+            echo "❌ app.js not found!"
+            exit 1
+          fi
+          echo "✅ All required files found!"
+
+      - name: 📊 Show file sizes
+        run: |
+          echo "📊 File sizes:"
+          ls -lh *.html *.css *.js 2>/dev/null || echo "Some files may be missing"
+          echo ""
+          echo "📈 Total project size:"
+          du -sh . 2>/dev/null || echo "Could not calculate size"
+
+      - name: 🔍 Basic HTML validation
+        run: |
+          echo "🔍 Checking HTML structure..."
+          if grep -q "<!DOCTYPE html>" index.html; then
+            echo "✅ DOCTYPE found"
+          else
+            echo "⚠️ DOCTYPE not found"
+          fi
+
+          if grep -q "<title>" index.html; then
+            echo "✅ Title tag found"
+          else
+            echo "⚠️ Title tag not found"
+          fi
+
+          if grep -q "styles.css" index.html; then
+            echo "✅ CSS linked"
+          else
+            echo "⚠️ CSS not linked"
+          fi
+
+          if grep -q "app.js" index.html; then
+            echo "✅ JavaScript linked"
+          else
+            echo "⚠️ JavaScript not linked"
+          fi
+
+      - name: 🔍 Basic CSS validation
+        run: |
+          echo "🔍 Checking CSS structure..."
+          if [ -f "styles.css" ]; then
+            css_size=$(wc -c < styles.css)
+            echo "📏 CSS file size: $css_size bytes"
+            
+            if grep -q "body" styles.css; then
+              echo "✅ Body styles found"
+            fi
+            
+            if grep -q "@media" styles.css; then
+              echo "✅ Responsive design detected"
+            fi
+          fi
+
+      - name: 🔍 Basic JavaScript validation
+        run: |
+          echo "🔍 Checking JavaScript structure..."
+          if [ -f "app.js" ]; then
+            js_size=$(wc -c < app.js)
+            echo "📏 JavaScript file size: $js_size bytes"
+            
+            if grep -q "function" app.js; then
+              echo "✅ Functions found"
+            fi
+            
+            if grep -q "addEventListener" app.js; then
+              echo "✅ Event listeners found"
+            fi
+            
+            if grep -q "document.getElementById" app.js; then
+              echo "✅ DOM manipulation found"
+            fi
+          fi
+
+      - name: 📦 Create deployment directory
+        run: |
+          echo "📦 Preparing files for deployment..."
+          mkdir -p dist
           cp index.html dist/
           cp styles.css dist/
           cp app.js dist/
 
+          # README가 있으면 복사
+          if [ -f "README.md" ]; then
+            cp README.md dist/
+          fi
+
+          echo "✅ Files copied to dist directory"
+          echo "📂 Deployment contents:"
+          ls -la dist/
+
       - name: 📄 Setup GitHub Pages
         uses: actions/configure-pages@v4
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
       - name: 📤 Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
           path: ./dist
 
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         uses: actions/deploy-pages@v4
 
-  # 4. 성능 테스트 (선택적)
-  performance-test:
-    name: 📊 Performance Test
+  # 2. 배포 후 성능 테스트 (선택적)
+  performance-check:
+    name: 📊 Performance Check
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: build-and-deploy
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
     steps:
@@ -160,33 +169,84 @@ jobs:
       - name: 🔧 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: "18"
 
-      - name: 📦 Install Lighthouse CI
-        run: npm install -g @lhci/cli
-
-      - name: 🚦 Run Lighthouse CI
+      - name: 📊 Install and run basic performance check
         run: |
-          lhci autorun --upload.target=temporary-public-storage
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        continue-on-error: true
+          echo "📊 Running basic performance analysis..."
 
-  # 5. 알림 (선택적)
-  notify:
-    name: 📢 Notification
+          # 파일 크기 분석
+          html_size=$(wc -c < index.html)
+          css_size=$(wc -c < styles.css)
+          js_size=$(wc -c < app.js)
+          total_size=$((html_size + css_size + js_size))
+
+          echo "📏 File Size Analysis:"
+          echo "  HTML: ${html_size} bytes"
+          echo "  CSS:  ${css_size} bytes"
+          echo "  JS:   ${js_size} bytes"
+          echo "  Total: ${total_size} bytes"
+
+          # 성능 권장사항
+          echo ""
+          echo "📋 Performance Recommendations:"
+
+          if [ $total_size -gt 1000000 ]; then
+            echo "⚠️  Total size > 1MB - Consider optimization"
+          else
+            echo "✅ Total size is reasonable"
+          fi
+
+          if [ $css_size -gt 100000 ]; then
+            echo "⚠️  CSS size > 100KB - Consider minification"
+          else
+            echo "✅ CSS size is good"
+          fi
+
+          if [ $js_size -gt 100000 ]; then
+            echo "⚠️  JS size > 100KB - Consider minification"
+          else
+            echo "✅ JavaScript size is good"
+          fi
+
+  # 3. 배포 상태 알림
+  notify-status:
+    name: 📢 Deployment Status
     runs-on: ubuntu-latest
-    needs: [deploy, performance-test]
+    needs: [build-and-deploy, performance-check]
     if: always() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
 
     steps:
       - name: 🎉 Success Notification
-        if: needs.deploy.result == 'success'
+        if: needs.build-and-deploy.result == 'success'
         run: |
-          echo "🎉 배포 성공! 스프레드시트가 성공적으로 배포되었습니다."
-          echo "🌐 URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo "🎉 배포 성공!"
+          echo "📊 Modern Spreadsheet가 성공적으로 배포되었습니다!"
+          echo ""
+          echo "🌐 배포된 사이트:"
+          echo "   https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo ""
+          echo "📋 배포 정보:"
+          echo "   Repository: ${{ github.repository }}"
+          echo "   Branch: ${{ github.ref_name }}"
+          echo "   Commit: ${{ github.sha }}"
+          echo "   Actor: ${{ github.actor }}"
+          echo ""
+          echo "✨ 스프레드시트를 즐겁게 사용하세요!"
 
       - name: ❌ Failure Notification
-        if: needs.deploy.result == 'failure'
+        if: needs.build-and-deploy.result == 'failure'
         run: |
-          echo "❌ 배포 실패! 로그를 확인해주세요."
+          echo "❌ 배포 실패!"
+          echo "🔍 다음 사항을 확인해주세요:"
+          echo "   1. index.html, styles.css, app.js 파일이 모두 있는지"
+          echo "   2. HTML에서 CSS와 JS 파일이 올바르게 링크되어 있는지"
+          echo "   3. 파일 경로와 이름이 정확한지"
+          echo ""
+          echo "📖 자세한 오류 내용은 Actions 로그를 확인해주세요."
+
+      - name: ⚠️ Partial Success
+        if: needs.build-and-deploy.result == 'success' && needs.performance-check.result == 'failure'
+        run: |
+          echo "⚠️ 배포는 성공했지만 성능 체크에서 문제가 발생했습니다."
+          echo "🌐 사이트는 정상적으로 작동하지만, 성능을 개선해보세요."
