@@ -1,17 +1,260 @@
-table {
-  border-collapse: collapse;
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-th,
-td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  min-width: 80px;
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ff4757 100%);
+  min-height: 100vh;
+  padding: 2rem;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.header {
+  background: linear-gradient(135deg, #ff6b35, #ff4757);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.controls {
+  padding: 1.5rem 2rem;
+  background: rgba(255, 248, 240, 0.9);
+  border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  background: linear-gradient(135deg, #ff6b35, #ff4757);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.6);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #f7931e, #ffa726);
+  box-shadow: 0 4px 15px rgba(247, 147, 30, 0.4);
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 8px 25px rgba(247, 147, 30, 0.6);
+}
+
+.spreadsheet-container {
+  padding: 2rem;
+  overflow-x: auto;
+}
+
+.spreadsheet {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.spreadsheet th {
+  background: linear-gradient(135deg, #fff8f0, #ffe0cc);
+  color: #bf360c;
+  font-weight: 700;
+  padding: 1rem;
+  text-align: center;
+  border-right: 1px solid rgba(255, 107, 53, 0.2);
+  border-bottom: 2px solid rgba(255, 107, 53, 0.2);
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  position: relative;
+  min-width: 100px;
+  transition: all 0.3s ease;
+}
+
+.spreadsheet th:first-child {
+  background: linear-gradient(135deg, #ff6b35, #ff4757);
+  color: white;
+  border-top-left-radius: 12px;
+}
+
+.spreadsheet tbody th {
+  background: linear-gradient(135deg, #ff6b35, #ff4757);
+  color: white;
+  font-weight: 600;
+  border-right: 2px solid rgba(255, 107, 53, 0.2);
+  border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.spreadsheet td {
+  border-right: 1px solid rgba(255, 107, 53, 0.15);
+  border-bottom: 1px solid rgba(255, 107, 53, 0.15);
+  padding: 0;
+  min-width: 120px;
+  height: 50px;
+  position: relative;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.spreadsheet td:hover {
+  background: rgba(255, 107, 53, 0.08);
+}
+
+.cell-input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 1rem;
+  font-size: 1rem;
+  background: transparent;
+  transition: all 0.2s ease;
   text-align: center;
 }
-th.header-highlight,
-td.header-highlight {
-  background: #b3e5fc;
+
+.cell-input:focus {
+  background: rgba(255, 107, 53, 0.08);
+  box-shadow: inset 0 0 0 2px #ff6b35;
+  border-radius: 4px;
 }
-td:focus {
-  outline: 2px solid #1976d2;
+
+.header-highlight {
+  background: linear-gradient(135deg, #ff8a50, #ff6b35) !important;
+  color: white !important;
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
 }
+
+.cell-highlight {
+  background: rgba(255, 138, 80, 0.2) !important;
+  transform: scale(1.01);
+}
+
+.footer {
+  padding: 1rem 2rem;
+  background: rgba(255, 248, 240, 0.9);
+  text-align: center;
+  color: #bf360c;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 107, 53, 0.1);
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .spreadsheet-container {
+    padding: 1rem;
+  }
+  
+  .cell-input {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.spreadsheet tr {
+  animation: fadeIn 0.4s ease-out;
+}
+</style>
