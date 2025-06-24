@@ -56,7 +56,7 @@
 ```bash
 # 1. 저장소 클론
 git clone https://github.com/ChatHongPT/goorm-04.git
-cd modern-spreadsheet
+cd goorm-04
 
 # 2. 로컬 서버 시작 (선택 1: Python)
 python -m http.server 3000
@@ -73,7 +73,7 @@ npx http-server . -p 3000
 ### 🌐 즉시 체험
 
 ```
-🔗 Live Demo: https://your-username.github.io/modern-spreadsheet
+🔗 Live Demo: https://ChatHongPTgithub.io/goorm-04
 ```
 
 ### ⚡ 원클릭 배포
