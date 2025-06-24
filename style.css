@@ -1,0 +1,17 @@
+table {
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  min-width: 80px;
+  text-align: center;
+}
+th.header-highlight,
+td.header-highlight {
+  background: #b3e5fc;
+}
+td:focus {
+  outline: 2px solid #1976d2;
+}

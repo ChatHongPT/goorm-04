@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>모던 스프레드시트</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📊 모던 스프레드시트</h1>
+      <p>직관적이고 아름다운 데이터 관리 도구</p>
+    </div>
+
+    <div class="controls">
+      <button class="btn" onclick="exportExcel()">
+        📥 Excel로 내보내기
+      </button>
+      <button class="btn btn-secondary" onclick="addRow()">
+        ➕ 행 추가
+      </button>
+      <button class="btn btn-secondary" onclick="addColumn()">
+        ➕ 열 추가
+      </button>
+      <button class="btn" onclick="clearAll()" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+        🗑️ 전체 삭제
+      </button>
+    </div>
+
+    <div class="spreadsheet-container">
+      <table class="spreadsheet" id="sheet">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="col-header">A</th>
+            <th class="col-header">B</th>
+            <th class="col-header">C</th>
+            <th class="col-header">D</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th class="row-header">1</th>
+            <td><input type="text" class="cell-input" data-row="1" data-col="A"></td>
+            <td><input type="text" class="cell-input" data-row="1" data-col="B"></td>
+            <td><input type="text" class="cell-input" data-row="1" data-col="C"></td>
+            <td><input type="text" class="cell-input" data-row="1" data-col="D"></td>
+          </tr>
+          <tr>
+            <th class="row-header">2</th>
+            <td><input type="text" class="cell-input" data-row="2" data-col="A"></td>
+            <td><input type="text" class="cell-input" data-row="2" data-col="B"></td>
+            <td><input type="text" class="cell-input" data-row="2" data-col="C"></td>
+            <td><input type="text" class="cell-input" data-row="2" data-col="D"></td>
+          </tr>
+          <tr>
+            <th class="row-header">3</th>
+            <td><input type="text" class="cell-input" data-row="3" data-col="A"></td>
+            <td><input type="text" class="cell-input" data-row="3" data-col="B"></td>
+            <td><input type="text" class="cell-input" data-row="3" data-col="C"></td>
+            <td><input type="text" class="cell-input" data-row="3" data-col="D"></td>
+          </tr>
+          <tr>
+            <th class="row-header">4</th>
+            <td><input type="text" class="cell-input" data-row="4" data-col="A"></td>
+            <td><input type="text" class="cell-input" data-row="4" data-col="B"></td>
+            <td><input type="text" class="cell-input" data-row="4" data-col="C"></td>
+            <td><input type="text" class="cell-input" data-row="4" data-col="D"></td>
+          </tr>
+          <tr>
+            <th class="row-header">5</th>
+            <td><input type="text" class="cell-input" data-row="5" data-col="A"></td>
+            <td><input type="text" class="cell-input" data-row="5" data-col="B"></td>
+            <td><input type="text" class="cell-input" data-row="5" data-col="C"></td>
+            <td><input type="text" class="cell-input" data-row="5" data-col="D"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      <p>💡 팁: 셀을 클릭하면 해당 행과 열이 하이라이트됩니다</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
