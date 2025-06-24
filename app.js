@@ -1,3 +1,4 @@
+// 전역 변수
 let currentRow = 5;
 let currentCol = 4;
 const columns = [
@@ -41,6 +42,10 @@ function initializeButtonListeners() {
   document.getElementById("exportBtn").addEventListener("click", exportExcel);
   document.getElementById("addRowBtn").addEventListener("click", addRow);
   document.getElementById("addColumnBtn").addEventListener("click", addColumn);
+  document.getElementById("removeRowBtn").addEventListener("click", removeRow);
+  document
+    .getElementById("removeColumnBtn")
+    .addEventListener("click", removeColumn);
   document.getElementById("clearAllBtn").addEventListener("click", clearAll);
 }
 
@@ -111,15 +116,15 @@ function addRow() {
   const newRow = document.createElement("tr");
 
   newRow.innerHTML = `
-        <th class="row-header">${currentRow}</th>
-        ${columns
-          .slice(0, currentCol)
-          .map(
-            (col) =>
-              `<td><input type="text" class="cell-input" data-row="${currentRow}" data-col="${col}"></td>`
-          )
-          .join("")}
-      `;
+    <th class="row-header">${currentRow}</th>
+    ${columns
+      .slice(0, currentCol)
+      .map(
+        (col) =>
+          `<td><input type="text" class="cell-input" data-row="${currentRow}" data-col="${col}"></td>`
+      )
+      .join("")}
+  `;
 
   tbody.appendChild(newRow);
 
@@ -168,6 +173,86 @@ function addColumn() {
     input.addEventListener("blur", handleCellBlur);
     input.addEventListener("input", handleCellInput);
   });
+
+  // 애니메이션 효과
+  newHeader.style.opacity = "0";
+  newHeader.style.transform = "translateX(-20px)";
+  setTimeout(() => {
+    newHeader.style.transition = "all 0.3s ease";
+    newHeader.style.opacity = "1";
+    newHeader.style.transform = "translateX(0)";
+  }, 10);
+}
+
+// 행 제거
+function removeRow() {
+  if (currentRow <= 1) {
+    alert("최소 1개의 행은 유지되어야 합니다.");
+    return;
+  }
+
+  if (confirm("마지막 행을 삭제하시겠습니까?")) {
+    const tbody = document.querySelector("#sheet tbody");
+    const lastRow = tbody.lastElementChild;
+
+    if (lastRow) {
+      // 삭제 애니메이션
+      lastRow.style.transition = "all 0.3s ease";
+      lastRow.style.opacity = "0";
+      lastRow.style.transform = "translateY(-20px)";
+
+      setTimeout(() => {
+        lastRow.remove();
+        currentRow--;
+      }, 300);
+    }
+  }
+}
+
+// 열 제거
+function removeColumn() {
+  if (currentCol <= 1) {
+    alert("최소 1개의 열은 유지되어야 합니다.");
+    return;
+  }
+
+  if (confirm("마지막 열을 삭제하시겠습니까?")) {
+    const lastColLetter = columns[currentCol - 1];
+
+    // 헤더에서 마지막 열 제거
+    const headerRow = document.querySelector("#sheet thead tr");
+    const lastHeader = headerRow.lastElementChild;
+    if (lastHeader && lastHeader.textContent === lastColLetter) {
+      // 삭제 애니메이션
+      lastHeader.style.transition = "all 0.3s ease";
+      lastHeader.style.opacity = "0";
+      lastHeader.style.transform = "translateX(20px)";
+
+      setTimeout(() => {
+        lastHeader.remove();
+      }, 300);
+    }
+
+    // 각 행에서 마지막 셀 제거
+    const bodyRows = document.querySelectorAll("#sheet tbody tr");
+    bodyRows.forEach((row, index) => {
+      const lastCell = row.lastElementChild;
+      if (lastCell && lastCell.tagName === "TD") {
+        // 삭제 애니메이션 (약간의 지연으로 순차적 효과)
+        setTimeout(() => {
+          lastCell.style.transition = "all 0.3s ease";
+          lastCell.style.opacity = "0";
+          lastCell.style.transform = "translateX(20px)";
+
+          setTimeout(() => {
+            lastCell.remove();
+          }, 300);
+        }, index * 50);
+      }
+    });
+
+    currentCol--;
+  }
 }
 
 // 전체 삭제
